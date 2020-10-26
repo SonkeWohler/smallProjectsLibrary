@@ -1,9 +1,7 @@
 # smallProjectsLibrary
 Since I haven't programmed for fun since my father died, I figure I should start doing that again. Anything small I'll put in here.
 
-## cmd
-Batch files:
-
+## cmd - batch files
 ### Matrix
 This was my first programming for fun project years ago. Back then it was in Java, now it's a batch file. When run it should look something like the matrix screen. 
 
