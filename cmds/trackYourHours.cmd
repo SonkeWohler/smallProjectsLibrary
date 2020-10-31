@@ -8,12 +8,12 @@ echo -----
 echo start working?
 PAUSE
 :stop-question
-REM for loop adapted from https://stackoverflow.com/questions/9922498/calculate-time-difference-in-windows-batch-file
-for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (set /A "startTime=(((%%a*60)+%%b)*60+%%c)")
+REM for loop copied from https://stackoverflow.com/questions/9922498/calculate-time-difference-in-windows-batch-file
+for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (set /A "startTime=(((%%a*60)+1%%b %% 100)*60+1%%c %% 100)*100+1%%d %% 100")
 PAUSE
 :calculate
-for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (set /A "endTime=(((%%a*60)+%%b)*60+%%c)")
-set /a todayTime=todayTime+endTime-startTime
+for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (set /A "endTime=(((%%a*60)+1%%b %% 100)*60+1%%c %% 100)*100+1%%d %% 100")
+set /a todayTime=todayTime+endTime/100-startTime/100
 echo You have worked %todayTime% seconds since starting this program
 set /a todayHours=%todayTime% / 3600
 set /a todaySeconds=%todayTime% %% 3600
