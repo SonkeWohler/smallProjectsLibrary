@@ -16,5 +16,5 @@ Times your daily hours as you're working. I want to make it record them automati
 
 ## shellScripts
 These are generally better than cmd because shell tends to address some of the usability issues that windows aparrently doesn't. The main reason may be that windows is more concerned about backwards compatibility than GNU.
-### Advent of Code
+### [Advent of Code](https://adventofcode.com/)
 Most of these are more convenient to quickly ocde together in a shell. I could use python, but where is the fun in not learning something new?
