@@ -1,7 +1,9 @@
 # smallProjectsLibrary
 Since I haven't programmed for fun since my father died, I figure I should start doing that again. Anything small I'll put in here.
 
-These are small projects with small contributions at a time, so I won't usually bother with PRs.
+These are small projects with small contributions at a time, so I won't usually bother with PRs or separate branches.
+
+Why don't I use gists? When I started this repo I hadn't discovered them yet.
 
 ## cmd - batch files
 ### Matrix
