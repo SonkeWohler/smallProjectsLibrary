@@ -10,7 +10,7 @@ inputFile="/d/temp/input.txt"
 ### the more buckets the faster the next step would be
 let i=0
 let j=0
-while read -r line
+while read line
 do
   if (($line < 1000)) 
   then
@@ -20,7 +20,7 @@ do
     moreThan[$j]=$line
     let j=j+1
   fi
-done < "/d/temp/input.txt"
+done < $inputFile
 
 ### Step 2:
 ### add the matching buckets together until you find the match
