@@ -1,1 +1,16 @@
+### --- temporary files
+# vim swap files
+*.sw[a-z]
+# common temp files
+ *~
+ 
+# when quickly testing something (that is bigger than jshell or such)
 test.*
+
+### --- compiled files
+#-- tags
+tags
+#-- general purpose
+target/
+#-- cargo
+*.lock
