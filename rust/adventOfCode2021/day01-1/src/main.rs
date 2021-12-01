@@ -7,7 +7,7 @@ use std::collections::VecDeque;
 // Deque docs at https://doc.rust-lang.org/std/collections/struct.VecDeque.html#method.pop_front
 
 fn main() {
-    let filename = "1.txt";
+    let filename = "input.txt";
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(file);
 
