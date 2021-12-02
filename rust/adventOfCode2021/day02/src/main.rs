@@ -12,6 +12,7 @@ fn main() {
 
     let mut horizontal: i32 = 0;
     let mut depth: i32 = 0;
+    let mut aim: i32 = 0;
 
     for line in reader.lines() {
 
@@ -24,14 +25,15 @@ fn main() {
         // match string against the three
         if vec[0].starts_with('f') {
             horizontal = horizontal + magnitude;
+            depth = depth + aim * magnitude;
         } else if vec[0].starts_with('d') {
-            depth = depth + magnitude;
+            aim = aim + magnitude;
         } else {
-            depth = depth - magnitude;
+            aim = aim - magnitude;
         }
 
-        println!("{} --- {}", vec[0], magnitude);
-        println!("{} X {}", horizontal, depth);
+        //println!("{} --- {}", vec[0], magnitude);
+        //println!("{} X {}", horizontal, depth);
 
     }
 
