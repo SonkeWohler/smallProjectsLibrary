@@ -73,24 +73,17 @@ fn main() {
 
     println!("There was a total of {} lines of length {}", count_lines, line_length);
 
-    let mut gamma = String::from("");
-    let mut epsilon = String::from("");
+    let mut gamma: u32 = 0;
 
     for digit in digits {
+        gamma <<= 1;
         if digit >= count_lines/2 {
-            gamma.push('1');
-            epsilon.push('0');
-        } else {
-            gamma.push('0');
-            epsilon.push('1');
+            gamma = gamma + 1;
         }
     }
 
-    let gamma = u32::from_str_radix(&gamma, 2).unwrap();
-    let epsilon = u32::from_str_radix(&epsilon, 2).unwrap();
-
-    // I would love to just invert gamma to get epsilon
-    // but since there are a bunch of leading '0' bits it's just easier this way
+    let mask = 2_u32.pow(line_length as u32) - 1;
+    let epsilon = gamma ^ mask;
 
     println!("gamma is: {} and epsilon is: {} for a power consumption of: {}", gamma, epsilon, gamma * epsilon);
 
