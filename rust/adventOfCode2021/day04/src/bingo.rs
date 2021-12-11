@@ -9,12 +9,17 @@ struct Entry {
 
 impl Entry {
     fn score(&self) -> u32 {
-        if self.drawn { self.value } else { 0 }
+        if self.drawn { 0 } else { self.value }
     }
 }
 
-/// represents a row or column of a board
+/// represents a row or column of a board in binary (for efficiency)
 /// keeps track of whether the values have been drawn
+/// keep in mind when debugging that they may not be oriented the way you expect them to be.  This
+/// is irrelevant as long as they are consistent, since they only have to detect whether all
+/// numbers in a row/column have been drawn, not which row/column that is.
+/// keep in mind that the binary number might be oriented such that it represents the draws right
+/// to left and upside down
 #[derive(Debug)]
 struct BoardVector {
     value: u32,
@@ -108,14 +113,14 @@ pub fn build_board(values: Vec<u32>, number_of_columns: usize) -> Board {
             drawn: false,
         };
 
-        let existing_entry = entries.get_mut(&value);
-        match existing_entry {
+        let existing_entry_vec = entries.get_mut(&value);
+        match existing_entry_vec {
             None => {
                 let vec = vec![entry];
                 entries.insert(value, vec);
             }
-            // this line doesn't work because it is an expression that gives the match a value
-            // and in this case the types don't match
+            // this commented line doesn't work because it is an expression that gives the match a
+            // value and in this case the types don't match
             //None => entries.insert(value, vec![entry]),
             Some(vec) => vec.push(entry),
         }
