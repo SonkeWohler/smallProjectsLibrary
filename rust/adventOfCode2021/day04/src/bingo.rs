@@ -48,6 +48,7 @@ pub struct Board {
     entries: HashMap<u32,Vec<Entry>>,
     rows: Vec<BoardVector>,
     cols: Vec<BoardVector>,
+    won: bool,
 
     // some hash based way to reference the locations of drawable values
     // must be able to point to multiple locations
@@ -55,9 +56,13 @@ pub struct Board {
 
 impl Board {
     pub fn draw(&mut self, draw: u32) -> bool{
+        if self.won { return false };
         let locations = self.draw_on_entry(draw);
         for location in locations {
-            if self.draw_on_vectors(location) { return true };
+            if self.draw_on_vectors(location) { 
+                self.won = true;
+                return true;
+            }
         }
         false
     }
@@ -148,5 +153,6 @@ pub fn build_board(values: Vec<u32>, number_of_columns: usize) -> Board {
         entries,
         rows,
         cols,
+        won: false,
     }
 }

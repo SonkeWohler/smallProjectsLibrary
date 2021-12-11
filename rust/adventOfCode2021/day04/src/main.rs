@@ -48,28 +48,35 @@ fn main() {
         boards.push(board);
     }
 
-    let mut score = 0;
-    let mut winning_draw = 0;
-    let mut winning_board = 0;
-    'outer: for draw in draws {
-        let mut board_count = 0;
+    let mut boards_won = 0;
+    for draw in draws {
+        if boards_won >= boards.len() {
+            break;
+        }
+
+        let mut board_i = 0;
         for board in &mut boards {
 
             if board.draw(draw) { 
-                score = board.score();
+                boards_won += 1;
+
+                let mut score = board.score();
                 score *= draw;
-                winning_draw = draw;
-                winning_board = board_count;
-                break 'outer; 
+
+                println!("A board has won on draw {}", draw);
+                println!("The board's score was {} and it was board index {}", score, board_i);
             }
 
-            board_count += 1;
+            board_i += 1;
 
         }
 
     }
 
-    println!("The final score of the winning board is {}", score);
-    println!("It is the {}. board and won with a draw of {}", winning_board + 1, winning_draw);
+    println!(" -------------- " );
+    println!("    ======== " );
+    println!(" -------------- " );
+    println!("This was the last board");
+    println!("Note: board indices starting at 0");
 
 }
