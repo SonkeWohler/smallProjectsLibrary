@@ -3,6 +3,7 @@ use std::io::{BufReader, BufRead};
 use std::str::SplitWhitespace;
 use std::fmt;
 
+#[derive(Debug)]
 struct Position {
     x: u32,
     y: u32,
@@ -15,6 +16,7 @@ impl fmt::Display for Position {
     
 }
 
+#[derive(Debug)]
 struct VentLine {
     start: Position,
     end: Position,
@@ -23,6 +25,25 @@ impl fmt::Display for VentLine {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}, -> {}", self.start, self.end)
     }
+}
+
+fn get_valid_vent_line(input: VentLine) -> Option<VentLine> {
+    if input.start.x != input.end.x && input.start.y != input.end.y {
+        return None;
+    }
+
+    let start_hash = input.start.x * input.start.y;
+    let end_hash = input.end.x * input.end.y;
+    if start_hash > end_hash {
+        let input =  VentLine {
+            start: input.end,
+            end: input.start,
+        };
+        return Some(input);
+    }
+
+    Some(input)
+
 }
 
 // I don't seem to understand enough about lifetimes just yet to do this with fewer lines of code,
@@ -73,13 +94,15 @@ fn main() {
         let line = line.trim().split_whitespace();
 
         let line = get_positions_from_input(line);
-        positions.push(line);
+        match get_valid_vent_line(line) {
+            None => continue,
+            Some(line) => positions.push(line),
+        }
 
     }
 
-    for position in positions {
+    for position in &positions {
         println!("{}", position);
     }
-
 
 }
