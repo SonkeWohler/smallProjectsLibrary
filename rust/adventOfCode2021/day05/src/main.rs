@@ -22,15 +22,6 @@ impl fmt::Display for Position {
     }
 }
 
-impl Position {
-    fn from_tuple(input: (u32, u32)) -> Position {
-        Position {
-            x: input.0,
-            y: input.1,
-        }
-    }
-}
-
 #[derive(Debug)]
 enum VentLineDirection {
     Horizontal,
@@ -65,13 +56,13 @@ impl fmt::Display for VentLine {
 }
 
 fn get_valid_vent_line(input: VentLine) -> VentLine {
-    let mut direction = VentLineDirection::Undefined;
+    let mut _direction = VentLineDirection::Undefined;
     if input.start.x == input.end.x {
-        direction = VentLineDirection::Vertical;
+        _direction = VentLineDirection::Vertical;
     } else if input.start.y == input.end.y {
-        direction = VentLineDirection::Horizontal;
+        _direction = VentLineDirection::Horizontal;
     } else {
-        direction = VentLineDirection::Diagonal;
+        _direction = VentLineDirection::Diagonal;
     }
 
     let start_hash = input.start.x * input.start.y;
@@ -80,14 +71,14 @@ fn get_valid_vent_line(input: VentLine) -> VentLine {
         return VentLine {
             start: input.end,
             end: input.start,
-            direction,
+            direction: _direction,
         };
     }
 
     VentLine{
         start: input.start,
         end: input.end,
-        direction,
+        direction: _direction,
     }
 
 }
@@ -121,10 +112,11 @@ impl Map {
     }
 
     fn read_position(&mut self, position: Position) {
-        match self.map.get(&position) {
-            None => self.map.insert(position, 1),
-            Some(value) => self.map.insert(position, value + 1),
+        let value = match self.map.get(&position) {
+            None => 1,
+            Some(value) => value + 1,
         };
+        self.map.insert(position, value);
     }
 }
 
