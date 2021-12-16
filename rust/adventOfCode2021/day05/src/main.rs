@@ -8,8 +8,8 @@ use std::collections::HashMap;
 #[derive(Eq, PartialEq, Hash)]
 #[derive(Copy, Clone)]
 struct Position {
-    x: u32,
-    y: u32,
+    x: i32,
+    y: i32,
 }
 
 // https://doc.rust-lang.org/std/fmt/trait.Display.html
@@ -103,7 +103,7 @@ impl VentLine {
 /// this one will keep track of the number of vent lines on each position
 #[derive(Debug)]
 struct Map {
-    map: HashMap<Position, u32>,
+    map: HashMap<Position, i32>,
 }
 
 impl Map {
@@ -120,6 +120,21 @@ impl Map {
             match &line.direction {
                 VentLineDirection::Horizontal => position.x += 1,
                 VentLineDirection::Vertical => position.y += 1,
+                VentLineDirection::DiagonalRight => {
+                    position.x += 1;
+                    position.y += 1;
+                }
+                VentLineDirection::DiagonalLeft => {
+                    position.x -= 1;
+                    position.y += 1;
+
+                    // it's ugly, but need to check somewhere
+                    if position.x < line.end.x {
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
                 _ => panic!("VentLine.direction has a value it shouldn't have right now!"),
             };
             if position.x > line.end.x || position.y > line.end.y {
@@ -187,8 +202,6 @@ fn main() {
         let line = get_vent_line_from_input(line);
         let line = VentLine::get_valid_vent_line(line);
         match line.direction {
-            VentLineDirection::DiagonalRight => continue,
-            VentLineDirection::DiagonalLeft => continue,
             VentLineDirection::Undefined => panic!("invalid vent line direction after it was supposed to have been validated"),
             _ => map.read_line(line),
         }
