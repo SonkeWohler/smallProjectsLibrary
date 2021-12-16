@@ -5,11 +5,8 @@ use std::fmt;
 use std::collections::HashMap;
 
 #[derive(Debug)]
-#[derive(Eq)]
-#[derive(PartialEq)]
-#[derive(Hash)]
-#[derive(Copy)]
-#[derive(Clone)]
+#[derive(Eq, PartialEq, Hash)]
+#[derive(Copy, Clone)]
 struct Position {
     x: u32,
     y: u32,
@@ -55,32 +52,34 @@ impl fmt::Display for VentLine {
     }
 }
 
-fn get_valid_vent_line(input: VentLine) -> VentLine {
-    let mut _direction = VentLineDirection::Undefined;
-    if input.start.x == input.end.x {
-        _direction = VentLineDirection::Vertical;
-    } else if input.start.y == input.end.y {
-        _direction = VentLineDirection::Horizontal;
-    } else {
-        _direction = VentLineDirection::Diagonal;
-    }
+impl VentLine {
+    fn get_valid_vent_line(input: VentLine) -> VentLine {
+        let mut _direction = VentLineDirection::Undefined;
+        if input.start.x == input.end.x {
+            _direction = VentLineDirection::Vertical;
+        } else if input.start.y == input.end.y {
+            _direction = VentLineDirection::Horizontal;
+        } else {
+            _direction = VentLineDirection::Diagonal;
+        }
 
-    let start_hash = input.start.x * input.start.y;
-    let end_hash = input.end.x * input.end.y;
-    if start_hash > end_hash {
-        return VentLine {
-            start: input.end,
-            end: input.start,
+        let start_hash = input.start.x * input.start.y;
+        let end_hash = input.end.x * input.end.y;
+        if start_hash > end_hash {
+            return VentLine {
+                start: input.end,
+                end: input.start,
+                direction: _direction,
+            };
+        }
+
+        VentLine{
+            start: input.start,
+            end: input.end,
             direction: _direction,
-        };
-    }
+        }
 
-    VentLine{
-        start: input.start,
-        end: input.end,
-        direction: _direction,
     }
-
 }
 
 /// this one will keep track of the number of vent lines on each position
@@ -89,14 +88,14 @@ struct Map {
     map: HashMap<Position, u32>,
 }
 
-fn construct_map() -> Map {
-    Map {
-        map: HashMap::new(),
-    }
-}
-
 impl Map {
-    pub fn read_line(&mut self, line: VentLine) {
+    fn construct_empty() -> Map {
+        Map {
+            map: HashMap::new(),
+        }
+    }
+
+    fn read_line(&mut self, line: VentLine) {
         let mut position = line.start;
         loop {
             self.read_position(position);
@@ -161,14 +160,14 @@ fn main() {
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(file);
 
-    let mut map = construct_map();
+    let mut map = Map::construct_empty();
 
     for line in reader.lines() {
         let line = line.unwrap();   // if this fails the program might as well
         let line = line.trim().split_whitespace();
 
         let line = get_vent_line_from_input(line);
-        let line = get_valid_vent_line(line);
+        let line = VentLine::get_valid_vent_line(line);
         match line.direction {
             VentLineDirection::Diagonal => continue,
             VentLineDirection::Undefined => panic!("invalid vent line direction after it was supposed to have been validated"),
