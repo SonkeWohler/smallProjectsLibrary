@@ -106,7 +106,6 @@ fn construct_map() -> Map {
 
 impl Map {
     pub fn read_line(&mut self, line: VentLine) {
-        println!("reading vent line `{}` into map",line);
         let mut position = line.start;
         loop {
             self.read_position(position);
@@ -122,7 +121,6 @@ impl Map {
     }
 
     fn read_position(&mut self, position: Position) {
-        println!("reading position {} into map", position);
         match self.map.get(&position) {
             None => self.map.insert(position, 1),
             Some(value) => self.map.insert(position, value + 1),
@@ -187,4 +185,13 @@ fn main() {
 
     }
 
+    let mut intersections = 0;
+    for vent_depth in map.map.values() {
+        if vent_depth > &1 {
+            intersections += 1;
+        }
+    }
+
+    println!();
+    println!("There are {} intersections of at least two vent lines", intersections);
 }
