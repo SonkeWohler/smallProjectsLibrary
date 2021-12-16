@@ -2,8 +2,12 @@ use std::fs::File;
 use std::io::{BufReader, BufRead};
 use std::str::SplitWhitespace;
 use std::fmt;
+use std::collections::HashMap;
 
 #[derive(Debug)]
+#[derive(Eq)]
+#[derive(PartialEq)]
+#[derive(Hash)]
 struct Position {
     x: u32,
     y: u32,
@@ -46,6 +50,30 @@ fn get_valid_vent_line(input: VentLine) -> Option<VentLine> {
 
 }
 
+/// this one will keep track of the number of vent lines on each position
+struct Map {
+    map: HashMap<Position, u32>,
+}
+
+fn construct_map() -> Map {
+    Map {
+        map: HashMap::new(),
+    }
+}
+
+impl Map {
+    pub fn read_line(&mut self, line: VentLine) {
+        
+    }
+
+    fn read_position(&mut self, position: Position) {
+        match self.map.get(&position) {
+            None => self.map.insert(position, 1),
+            Some(value) => self.map.insert(position, value + 1),
+        };
+    }
+}
+
 // I don't seem to understand enough about lifetimes just yet to do this with fewer lines of code,
 // so I do it this way.
 // What I mean is that in order to pass SplitWhitespace.next() you need to specify lifetimes,
@@ -81,12 +109,12 @@ fn get_positions_from_input(mut input: SplitWhitespace) -> VentLine {
 
 }
 
-
 fn main() {
     let filename = "input.txt";
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(file);
 
+    let mut map = construct_map();
     let mut positions: Vec<VentLine> = Vec::new();
 
     for line in reader.lines() {
