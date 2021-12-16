@@ -20,10 +20,12 @@ impl fmt::Display for Position {
 }
 
 #[derive(Debug)]
+#[derive(Clone, Copy)]
 enum VentLineDirection {
     Horizontal,
     Vertical,
-    Diagonal,
+    DiagonalRight,
+    DiagonalLeft,
     Undefined,
 }
 
@@ -33,7 +35,8 @@ impl fmt::Display for VentLineDirection {
             VentLineDirection::Undefined => '.',
             VentLineDirection::Horizontal => '-',
             VentLineDirection::Vertical => '|',
-            VentLineDirection::Diagonal => '/',
+            VentLineDirection::DiagonalLeft => '/',
+            VentLineDirection::DiagonalRight => '\\',
         };
         write!(f, "{}", display_char)
     }
@@ -52,33 +55,48 @@ impl fmt::Display for VentLine {
     }
 }
 
+impl Copy for VentLine {}
+impl Clone for VentLine {
+    fn clone(&self) -> VentLine {
+        VentLine {
+            start: self.start,
+            end: self.end,
+            direction: self.direction,
+        }
+    }
+}
+
 impl VentLine {
     fn get_valid_vent_line(input: VentLine) -> VentLine {
-        let mut _direction = VentLineDirection::Undefined;
+        let mut input = input;
         if input.start.x == input.end.x {
-            _direction = VentLineDirection::Vertical;
+            input.direction = VentLineDirection::Vertical;
+            if input.start.y > input.end.y {
+                let temporary = input.start;
+                input.start = input.end;
+                input.end = temporary;
+            }
         } else if input.start.y == input.end.y {
-            _direction = VentLineDirection::Horizontal;
+            input.direction = VentLineDirection::Horizontal;
+            if input.start.x > input.end.x {
+                let temporary = input.start;
+                input.start = input.end;
+                input.end = temporary;
+            }
         } else {
-            _direction = VentLineDirection::Diagonal;
+            if input.start.y > input.end.y {
+                let temporary = input.start;
+                input.start = input.end;
+                input.end = temporary;
+            }
+            if input.start.x > input.end.x {
+                input.direction = VentLineDirection::DiagonalLeft;
+            } else {
+                input.direction = VentLineDirection::DiagonalRight;
+            }
         }
 
-        let start_hash = input.start.x * input.start.y;
-        let end_hash = input.end.x * input.end.y;
-        if start_hash > end_hash {
-            return VentLine {
-                start: input.end,
-                end: input.start,
-                direction: _direction,
-            };
-        }
-
-        VentLine{
-            start: input.start,
-            end: input.end,
-            direction: _direction,
-        }
-
+        input
     }
 }
 
@@ -169,7 +187,8 @@ fn main() {
         let line = get_vent_line_from_input(line);
         let line = VentLine::get_valid_vent_line(line);
         match line.direction {
-            VentLineDirection::Diagonal => continue,
+            VentLineDirection::DiagonalRight => continue,
+            VentLineDirection::DiagonalLeft => continue,
             VentLineDirection::Undefined => panic!("invalid vent line direction after it was supposed to have been validated"),
             _ => map.read_line(line),
         }
